@@ -1,0 +1,110 @@
+ALAN SHUO YANG WANG 
+LEHIGH UNIVERSITY CSE 341 DATABASE FINAL PROJECT
+COMPLETION DATE: 05/01/2020
+
+EXPLANATION OF PROJECT: 
+This project was completed as a semester long final project for Lehigh University CSE 341 course. The main objective of this project was to 
+design and implement a database system using Oracle SQL and JAVA (JDBC). 
+
+EXPLANATION OF CODE OUTLINE: 
+This section explains the outline of the source java code in this project. 
+-----------------------------
+1. At the highest level, JDBC.java handles the initial oracle user logins and handles the login different 
+types of users: customer, bank teller, and administrator all while ensuring no misinputs could break the sytem.
+JDBC.java then establishes a connection with Lehigh University's edgar1 database using the user's specified login info. 
+Then it finally calls the initizing functions in either customer, bank teller, or administrator. I chose to not allow 
+the user to return to this page after they exit the customer, bank teller, or administrator page because anyone cannot 
+be more than one type of user. 
+-----------------------------
+2. The first class in the second level, Customer.java handles the functions from a customer after logging in. Note: customer name login is for formality and 
+is not used to log the customer in. This class has several main functions including: View Personal Information, View Bill Activities, View Branch ATM, 
+View Account Information, Make Purchase, and Take Out New Loan. 
+
+View Personal Information: displays basic information related to the user such as customer id, name, home address, phone number, and DOB. Then 
+the program asks the user if they would like to make a simple update to these information. 
+(Requires customer's SSN to make a change and 3 incorrect SSN inputs kicks the user out of the program. This is done intentionally as this can 
+mean that a fake user has entered the account)
+
+View Bill Activities: displays every payment tied to the customer, showing payment date, amount, and status. Status is an interesting addition 
+I decided to make to this function that compares the date of the statement to 2017-01-01 (arbitrary date) and anything before this date is considered PAID and 
+anything after is considered UNPAID. I did this to allow the user see all their statements and easily identify which ones they need to worry about. 
+
+View Branch ATM: dispalys the Branch address, opening days, and time of each branch in Nickle Savings Bank. This is just a handy function that allows the 
+user to quickly find out how to get to a Nickle Savings Branch. Assume ATMs are located at Branch as well. 
+
+View Account Information: displays the account ID, amount, minimum balance, and penalty of each account associated with this customer. 
+Note: I only show the last 3-4 digits of each account to for security reasons. The program would then prompt the customer to see if they would like to 
+add a new account, delete an account, or go back. Adding a new account takes the user through the account creation process which confirms if the user wants 
+a checking account or savings account. Both accounts have standard minimum balance and penalty amounts for simplicity. Deleting an existing account is 
+still under construction for one main reason. I was considering on how to reallocate the deleted account's funds and couldn't come to a conclusion on how 
+I wanted to do that. I am thinking of using the transfer function (will explain later). 
+
+Make Purchase: takes the customer through the purchasing process. Starting with asking the customer about vendor info. Note: vendor_id is a 4 digit number 
+that is unique to the establishment. However, it is difficult to enforce this since in real life there are millions of establishments and there would have 
+to be another large database that stores information about vendor names and vendor IDs. I just let the customer handle this section (probably get this from 
+their receipt). The functoin checks if the card is a debit or credit card and goes through different processes for both. 
+
+Take Out New Loan: takes the customer through the loan creation process. Starting with asking if the customer wants to take out a mortgage or unsecured loan. 
+Then gets basic information from user and confirms the details with the customer. Upon approval from customer, the program will put that loan into the customer's 
+account. 
+-----------------------------
+3. The second class in the second level, Teller.java handles the functions from a teller's perspective. 
+This class has several main functions including: View Customer Information, Balance Enquiry, Transfer funds, and Deposit/Withdraw Money.
+
+View Customer Information: same as customer version and also allows a teller to update customer information. 
+
+Balance Enquiry: similar to customer's view account information but this time the teller can see all the account digits. Also allows the teller to create a new account. 
+
+Transfer Funds: initially displays all the customer accounts. Then customer inputs one of their accounts and another account to transfer funds into. 
+
+Deposit Money/Withdraw Money: goes through the deposit withdraw process. Getting the account they want to modify (confirming that it is theirs) and noting the difference 
+between a checking and savings account. Does all the querying and updates the database accounts and transaction tables. Finally, prints the confirmation upon success (like a receipt).
+-----------------------------
+4. The third class in the second level, Administrator.java handles the administrator querying side. Over here, we let the administrator handle most of the querying. 
+They may enter a SQL query (serves as a direct form of contact between person and database). When they enter 'exit', the program ends. 
+-----------------------------
+5. The first class in the third level, Query.java handles the queries coming from Administrator.java and has a simple function parseQuery which takes the string and processes it. 
+-----------------------------
+6. The second class in the third level, ProjectInterface.java handles acquiring new information such as getting dates, transaction ID, purchase ID, loan ID. The class 
+can also print the current date and header. 
+-----------------------------
+7. The first class in the fourth level, RandomGenerator.java handles the creation of random information used in ProjectInterface.java such as random account ID, random string, 
+random char, and random integers. 
+-----------------------------
+USAGE INSTRUCTIONS AND SAMPLE TEST CASES: 
+Follow the usage process: 
+1. run the program use: java -jar asw322.jar
+2. enter the oracle logins: username and password will be changed by instructors
+3. select a user type by entering a number such as 1, 2, 3
+4. enter the user type logins.
+        for customer you may input:
+            customer ID: 46763292
+            customer Name: Josh Bailey (Any input here works)
+        for teller you may input: 
+            teller ID: 1005
+            teller Name: Gretal McElree (Any input here works)
+        for admin you have to input: 
+            admin ID: ZOMBIE 
+            admin Name: ATTACK
+This customer's SSN is: 408-16-0854
+5. select an action you want to make using numbers again
+        we will go through a make purchase process: 
+            enter a vendor name: Office Depot
+            enter a vendor ID: 7777
+            enter a credit card: 5602247447850338
+            enter the amount: 70.00
+        the transaction will be logged
+6. to exit the program press 7 
+        press Y or y to confirm 
+
+ER DIAGRAM CHANGES: 
+These are some changes to the ER diagram after submission: 
+Purchases take added vendor id and vendor name.
+New relation between checking account and debit card called linked to.
+new relation between account and transaction for withdraw and deposit.
+
+CODE SOURCES: 
+Customer getAge function: https://howtodoinjava.com/java/calculate-age-from-date-of-birth/
+ProjectInterface round function: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+RandomGenerator generateRandomAccountID and generateRandomString: https://www.geeksforgeeks.org/generate-random-string-of-given-size-in-java/
+
